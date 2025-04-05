@@ -61,7 +61,7 @@ Create a `.env` file in the backend directory with the following variables:
 
 ```env
 PORT=4000
-MONGODB_URI=mongodb+srv://yasamanmirvahaby:Yasaman1234@cluster0.b7ccyfh.mongodb.net/employee_management?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://yasamanmirvahaby:YOUR_PASSWORD@cluster0.b7ccyfh.mongodb.net/employee_management?retryWrites=true&w=majority
 JWT_SECRET=your_jwt_secret_key
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
@@ -69,6 +69,7 @@ AWS_REGION=your_aws_region
 AWS_BUCKET_NAME=your_bucket_name
 ```
 
+Note: Replace the YOUR_PASSWORD with `Yasaman1234`
 
 Author: 
 Yasaman Mirvahabi Sabet

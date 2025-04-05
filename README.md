@@ -16,6 +16,10 @@ A full-stack application for managing employees with authentication, CRUD operat
     └── README.md         # Frontend documentation
 ```
 
+## Repository
+
+GitHub Repository: [https://github.com/YasamanMVS/101217770_comp3133_assignment2.git](https://github.com/YasamanMVS/101217770_comp3133_assignment2.git)
+
 ## Features
 
 - Admin authentication with JWT
@@ -24,6 +28,22 @@ A full-stack application for managing employees with authentication, CRUD operat
 - Profile picture upload to AWS S3
 - GraphQL API
 - Dockerized deployment
+- MongoDB Atlas Integration
+
+## Database Configuration
+
+The application uses MongoDB Atlas for database management:
+- Database Name: `employee_management`
+- Collections: 
+  - `users` (for admin authentication)
+  - `employees` (for employee data)
+
+## Admin Credentials
+
+```
+Username: admin
+Password: admin123
+```
 
 ## Getting Started
 
@@ -33,17 +53,23 @@ See [backend/README.md](backend/README.md) for backend setup and running instruc
 
 ### Frontend
 
-See [frontend/README.md](frontend/README.md) for frontend setup and running instructions.
+See [frontend/README.md](frontend/README.md) for frontend setup and running instructions (coming soon).
 
-## Deployment
+## Environment Setup
 
-The application can be deployed to Vercel using the following steps:
+Create a `.env` file in the backend directory with the following variables:
 
-1. Push your code to a Git repository
-2. Connect your repository to Vercel
-3. Configure environment variables in Vercel
-4. Deploy
+```env
+PORT=4000
+MONGODB_URI=mongodb+srv://yasamanmirvahaby:Yasaman1234@cluster0.b7ccyfh.mongodb.net/employee_management?retryWrites=true&w=majority
+JWT_SECRET=your_jwt_secret_key
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=your_aws_region
+AWS_BUCKET_NAME=your_bucket_name
+```
 
-## License
 
-This project is licensed under the MIT License. 
+Author: 
+Yasaman Mirvahabi Sabet
+Student ID: 101217770

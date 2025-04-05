@@ -1,22 +1,37 @@
-# Employee Management System
+# Employee Management System Backend
 
-A full-stack application for managing employees with authentication, CRUD operations, and profile picture uploads.
+The backend server for the Employee Management System, built with Node.js, Express, GraphQL, and MongoDB Atlas.
 
-## Features
+## Technologies Used
 
-- Admin authentication with JWT
-- Employee CRUD operations
-- Search employees by department or position
-- Profile picture upload to AWS S3
-- GraphQL API
-- Dockerized deployment
+- Node.js
+- Express
+- GraphQL (Apollo Server)
+- MongoDB Atlas
+- JWT Authentication
+- AWS S3 (for file uploads)
 
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- MongoDB
-- AWS S3 bucket for profile pictures
-- Docker and Docker Compose
+- MongoDB Atlas account
+- AWS account (for S3 bucket)
+
+## Database Configuration
+
+The application uses MongoDB Atlas:
+- Database Name: `employee_management`
+- Collections: 
+  - `users` (for admin authentication)
+  - `employees` (for employee data)
+
+## Admin User
+
+Default admin credentials 
+```
+Username: admin
+Password: admin123
+```
 
 ## Environment Variables
 
@@ -24,7 +39,7 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 PORT=4000
-MONGODB_URI=mongodb://localhost:27017/employee_management
+MONGODB_URI=mongodb+srv://yasamanmirvahaby:Yasaman1234@cluster0.b7ccyfh.mongodb.net/employee_management?retryWrites=true&w=majority
 JWT_SECRET=your_jwt_secret_key
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
@@ -32,20 +47,16 @@ AWS_REGION=your_aws_region
 AWS_BUCKET_NAME=your_bucket_name
 ```
 
+
+
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd 101217770_comp3133_assignment2
-```
-
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create admin user:
+2. Create admin user:
 ```bash
 node src/scripts/createAdmin.js
 ```
@@ -53,19 +64,16 @@ node src/scripts/createAdmin.js
 ## Running the Application
 
 ### Development Mode
-
-1. Start MongoDB:
-```bash
-docker-compose up mongodb
-```
-
-2. Start the backend server:
 ```bash
 npm run dev
 ```
 
-### Production Mode with Docker
+### Production Mode
+```bash
+npm start
+```
 
+### Docker
 ```bash
 docker-compose up --build
 ```
@@ -136,19 +144,39 @@ query SearchEmployees {
 }
 ```
 
-## Frontend
+## Project Structure
 
-The frontend application will be developed using Angular and will be available at `http://localhost:4200`.
+```
+backend/
+├── src/
+│   ├── config/         # Configuration files (AWS, etc.)
+│   ├── graphql/        # GraphQL schema and resolvers
+│   ├── middleware/     # Authentication middleware
+│   ├── models/         # MongoDB models
+│   ├── scripts/        # Utility scripts
+│   └── index.js        # Main server file
+├── .env                # Environment variables
+├── package.json        # Dependencies and scripts
+└── Dockerfile         # Docker configuration
+```
 
-## Deployment
+## Error Handling
 
-The application can be deployed to Vercel using the following steps:
+The API includes comprehensive error handling for:
+- Authentication errors
+- Database errors
+- Input validation
+- File upload errors
 
-1. Push your code to a Git repository
-2. Connect your repository to Vercel
-3. Configure environment variables in Vercel
-4. Deploy
+## Security Features
 
-## License
+- JWT-based authentication
+- Password hashing
+- Input sanitization
+- Secure file uploads
+- Environment variable protection
 
-This project is licensed under the MIT License. 
+
+Author: 
+Yasaman Mirvahabi Sabet
+Student ID: 101217770

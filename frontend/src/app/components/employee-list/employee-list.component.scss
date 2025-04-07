@@ -1,38 +1,138 @@
 .employee-list-container {
-  padding: 20px;
+  width: 100%;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding: 32px 0;
+  margin: 0;
+  min-height: calc(100vh - 64px);
+}
 
-  .table-container {
-    position: relative;
-    min-height: 200px;
-    max-height: 600px;
-    overflow: auto;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 48px;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
   }
+}
+
+.table-container {
+  padding: 0 48px;
+  margin: 0;
+  background-color: #1e1e1e;
 
   table {
     width: 100%;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    overflow: hidden;
   }
 
-  .mat-form-field {
-    font-size: 14px;
-    width: 100%;
-    margin-bottom: 20px;
+  th {
+    background-color: #333333;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 16px;
+    font-size: 15px;
   }
 
-  .mat-column-actions {
-    width: 120px;
-    text-align: center;
+  td {
+    color: #ffffff;
+    padding: 16px;
+
+    &.actions-cell {
+      white-space: nowrap;
+      width: 1%;
+      padding-right: 24px;
+
+      button {
+        margin: 0 4px;
+
+        &[color="primary"] {
+          color: #ffffff;
+          
+          &:hover {
+            color: #8b0000;
+          }
+        }
+
+        &[color="warn"] {
+          color: #f44336;
+          
+          &:hover {
+            color: #d32f2f;
+          }
+        }
+      }
+    }
   }
 
-  .loading-shade {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.15);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  tr:hover {
+    background-color: #3d3d3d;
+  }
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #8b0000;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message {
+  padding: 16px;
+  color: #f44336;
+  text-align: center;
+}
+
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  color: rgba(255, 255, 255, 0.7);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  span {
+    font-size: 16px;
+  }
+}
+
+button[mat-raised-button] {
+  background-color: #8b0000;
+  color: white;
+
+  &:hover {
+    background-color: darken(#8b0000, 10%);
+  }
+
+  mat-icon {
+    margin-right: 8px;
   }
 }

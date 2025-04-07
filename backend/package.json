@@ -1,28 +1,30 @@
 {
-  "name": "101217770_comp3133_assignment2",
+  "name": "employee-management-backend",
   "version": "1.0.0",
-  "description": "Employee Management System",
+  "description": "Backend for Employee Management System",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest"
+    "init-db": "node src/scripts/initDb.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@apollo/server": "^4.11.3",
     "apollo-server-express": "^3.12.1",
     "aws-sdk": "^2.1450.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "graphql": "^16.8.1",
+    "graphql": "^16.10.0",
+    "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
     "multer": "^1.4.5-lts.1",
-    "multer-s3": "^3.0.1"
+    "multer-s3": "^2.10.0"
   },
   "devDependencies": {
-    "jest": "^29.6.4",
     "nodemon": "^3.0.1"
   }
-} 
+}

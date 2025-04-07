@@ -1,0 +1,88 @@
+.form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: center;
+  }
+}
+
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  span {
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+.preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .preview-image {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+  }
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    min-width: 120px;
+  }
+}

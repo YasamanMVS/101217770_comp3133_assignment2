@@ -1,209 +1,117 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
-import { RouterModule } from '@angular/router';
-import { EmployeeService } from '../../services/employee.service';
+import { Router, RouterModule } from '@angular/router';
+import { Employee } from '../../models/employee.model';
+import { GraphQLService } from '../../core/services/graphql.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { Employee } from '../../models/employee.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-employee-list',
+  templateUrl: './employee-list.component.html',
+  styleUrls: ['./employee-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, RouterModule],
-  template: `
-    <div class="employee-list-container">
-      <div class="header">
-        <h1>Employees</h1>
-        <button mat-raised-button color="primary" routerLink="/employees/new">
-          <mat-icon>add</mat-icon>
-          Add Employee
-        </button>
-      </div>
-
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search Employees</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search by name, position, or department" #input>
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <div class="mat-elevation-z8">
-        <mat-table [dataSource]="dataSource" matSort>
-          <!-- Name Column -->
-          <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-            <mat-cell *matCellDef="let employee"> {{employee.firstName}} {{employee.lastName}} </mat-cell>
-          </ng-container>
-
-          <!-- Email Column -->
-          <ng-container matColumnDef="email">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-            <mat-cell *matCellDef="let employee"> {{employee.email}} </mat-cell>
-          </ng-container>
-
-          <!-- Position Column -->
-          <ng-container matColumnDef="position">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Position </mat-header-cell>
-            <mat-cell *matCellDef="let employee"> {{employee.position}} </mat-cell>
-          </ng-container>
-
-          <!-- Department Column -->
-          <ng-container matColumnDef="department">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Department </mat-header-cell>
-            <mat-cell *matCellDef="let employee"> {{employee.department}} </mat-cell>
-          </ng-container>
-
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
-            <mat-cell *matCellDef="let employee">
-              <button mat-icon-button [routerLink]="['/employees', employee.id]" matTooltip="View Details">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button [routerLink]="['/employees/edit', employee.id]" matTooltip="Edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="deleteEmployee(employee)" matTooltip="Delete">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-          <!-- Row shown when there is no matching data -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="5">No data matching the filter "{{input.value}}"</td>
-          </tr>
-        </mat-table>
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of employees"></mat-paginator>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .employee-list-container {
-      padding: 20px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .search-field {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    .mat-mdc-row:hover {
-      background-color: #f5f5f5;
-    }
-    .mat-column-actions {
-      width: 120px;
-      text-align: center;
-    }
-  `]
+  imports: [
+    CommonModule,
+    MaterialModule,
+    RouterModule
+  ]
 })
 export class EmployeeListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'email', 'position', 'department', 'actions'];
-  dataSource: MatTableDataSource<Employee>;
-  isLoading = true;
-  private filterValue = '';
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  employees: Employee[] = [];
+  loading = false;
+  error = '';
+  displayedColumns: string[] = ['profilePic', 'firstName', 'lastName', 'email', 'department', 'position', 'actions'];
+  private readonly defaultAvatar = 'assets/default-avatar.png';
 
   constructor(
-    private employeeService: EmployeeService,
+    private graphqlService: GraphQLService,
+    private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {
-    this.dataSource = new MatTableDataSource<Employee>([]);
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.loadEmployees();
+    this.fetchEmployees();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  loadEmployees(): void {
-    this.isLoading = true;
-    this.employeeService.getEmployees().subscribe({
+  private fetchEmployees(): void {
+    this.loading = true;
+    this.graphqlService.getEmployees().subscribe({
       next: (employees: Employee[]) => {
-        this.dataSource = new MatTableDataSource<Employee>(employees);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        if (this.filterValue) {
-          this.dataSource.filter = this.filterValue;
-        }
-        this.isLoading = false;
+        this.employees = employees;
+        this.loading = false;
       },
-      error: (error) => {
-        console.error('Error loading employees:', error);
-        this.snackBar.open('Error loading employees', 'Close', { duration: 3000 });
-        this.isLoading = false;
+      error: (error: Error) => {
+        this.error = 'Error loading employees';
+        this.loading = false;
+        this.snackBar.open(this.error, 'Close', { duration: 3000 });
       }
     });
   }
 
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.filterValue = filterValue.trim().toLowerCase();
-    
-    if (this.dataSource) {
-      this.dataSource.filter = this.filterValue;
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+  getProfilePicUrl(profilePic: string | null): string {
+    if (!profilePic) {
+      return this.defaultAvatar;
     }
+    
+    // If the URL is already absolute (starts with http:// or https://)
+    if (profilePic.startsWith('http://') || profilePic.startsWith('https://')) {
+      return profilePic;
+    }
+    
+    // If it's a relative URL (starts with /uploads/)
+    if (profilePic.startsWith('/uploads/')) {
+      return `${environment.apiUrl}${profilePic}`;
+    }
+    
+    // If it's just the filename
+    if (!profilePic.startsWith('/')) {
+      return `${environment.apiUrl}/uploads/${profilePic}`;
+    }
+    
+    return profilePic;
   }
 
-  deleteEmployee(employee: Employee): void {
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = this.defaultAvatar;
+  }
+
+  onAddEmployee(): void {
+    this.router.navigate(['/employees/new']);
+  }
+
+  onView(employee: Employee): void {
+    this.router.navigate(['/employees', employee.id]);
+  }
+
+  onEdit(employee: Employee): void {
+    this.router.navigate(['/employees', employee.id, 'edit']);
+  }
+
+  onDelete(employee: Employee): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Confirm Delete',
+        title: 'Delete Employee',
         message: `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.employeeService.deleteEmployee(employee.id).subscribe({
+        this.graphqlService.deleteEmployee(employee.id).subscribe({
           next: () => {
-            this.loadEmployees();
-            this.snackBar.open('Employee deleted successfully', 'Close', {
-              duration: 3000
-            });
+            this.snackBar.open('Employee deleted successfully', 'Close', { duration: 3000 });
+            this.fetchEmployees();
           },
-          error: (error) => {
-            this.snackBar.open('Error deleting employee: ' + error.message, 'Close', {
-              duration: 3000
-            });
+          error: (error: Error) => {
+            this.snackBar.open('Error deleting employee', 'Close', { duration: 3000 });
           }
         });
-      }
-    });
-  }
-
-  openEmployeeForm(employee?: any): void {
-    const dialogRef = this.dialog.open(EmployeeFormComponent, {
-      width: '500px',
-      data: employee
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadEmployees();
       }
     });
   }

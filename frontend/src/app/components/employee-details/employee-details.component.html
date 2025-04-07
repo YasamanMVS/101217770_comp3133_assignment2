@@ -1,1 +1,47 @@
-<p>employee-details works!</p>
+<div class="employee-details-container">
+  <div class="header">
+    <button mat-icon-button (click)="onBack()" matTooltip="Back to List">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Employee Details</h1>
+    <button mat-raised-button color="primary" (click)="onEdit()" *ngIf="employee">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+  </div>
+
+  <mat-card *ngIf="employee" class="employee-card">
+    <div class="profile-section">
+      <img [src]="getProfilePicUrl(employee.profilePic)" 
+           [alt]="employee.firstName + ' ' + employee.lastName" 
+           class="profile-picture"
+           (error)="onImageError($event)">
+      <h2>{{employee.firstName}} {{employee.lastName}}</h2>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="label">Email</span>
+        <span class="value">{{employee.email}}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Department</span>
+        <span class="value">{{employee.department}}</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Position</span>
+        <span class="value">{{employee.position}}</span>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="loading-shade" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    {{error}}
+  </div>
+</div>

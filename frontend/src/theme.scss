@@ -1,0 +1,71 @@
+@use '@angular/material/theming' as *;
+
+// Define custom palettes
+$dark-red-primary: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #8b0000,  // Main dark red
+  600: #7f0000,
+  700: #6a0000,
+  800: #550000,
+  900: #400000,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$dark-red-accent: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #d81b60,
+  600: #c2185b,
+  700: #ad1457,
+  800: #880e4f,
+  900: #560027,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+// Create the palettes
+$primary-palette: define-palette($dark-red-primary);
+$accent-palette: define-palette($dark-red-accent);
+$warn-palette: define-palette($mat-red);
+
+// Create the theme
+$theme: define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent: $accent-palette,
+    warn: $warn-palette,
+  ),
+  typography: define-typography-config(),
+  density: 0,
+));
+
+// Apply the theme
+@include angular-material-theme($theme); 

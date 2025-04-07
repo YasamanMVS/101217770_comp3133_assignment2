@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-export interface DialogData {
+export interface ConfirmDialogData {
   title: string;
   message: string;
 }
@@ -18,22 +18,36 @@ export interface DialogData {
       <p>{{ data.message }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button [mat-dialog-close]="false">Cancel</button>
-      <button mat-raised-button color="warn" [mat-dialog-close]="true">Confirm</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
     </mat-dialog-actions>
   `,
   styles: [`
-    mat-dialog-content {
-      min-width: 300px;
+    :host {
+      display: block;
+      padding: 1rem;
     }
+
+    mat-dialog-content {
+      margin: 1rem 0;
+    }
+
     mat-dialog-actions {
-      padding: 16px 0;
+      margin-bottom: 0;
     }
   `]
 })
 export class ConfirmDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
   ) {}
+
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+
+  onConfirm(): void {
+    this.dialogRef.close(true);
+  }
 } 

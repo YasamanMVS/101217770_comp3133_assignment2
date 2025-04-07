@@ -1,21 +1,23 @@
-# Employee Management System Backend
+# Employee Management System - Backend
 
 The backend server for the Employee Management System, built with Node.js, Express, GraphQL, and MongoDB Atlas.
 
-## Technologies Used
+## Features
 
-- Node.js
-- Express
-- GraphQL (Apollo Server)
-- MongoDB Atlas
-- JWT Authentication
-- AWS S3 (for file uploads)
+- Admin authentication with JWT
+- Employee CRUD operations
+- Search employees by department or position
+- Profile picture upload to AWS S3
+- GraphQL API
+- REST API for file uploads
+- MongoDB Atlas Integration
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v18.x LTS recommended)
+- npm (v9 or higher)
 - MongoDB Atlas account
-- AWS account (for S3 bucket)
+- AWS S3 account (for file uploads)
 
 ## Database Configuration
 
@@ -177,6 +179,6 @@ The API includes comprehensive error handling for:
 - Environment variable protection
 
 
-Author: 
-Yasaman Mirvahabi Sabet
+### Author   
+Yasaman Mirvahabi Sabet  
 Student ID: 101217770

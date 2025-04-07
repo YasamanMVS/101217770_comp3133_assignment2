@@ -1,1 +1,109 @@
-<p>employee-form works!</p>
+<div class="form-container">
+  <h2>{{ employee ? 'Edit' : 'Create' }} Employee</h2>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="employee-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" placeholder="Enter first name">
+        <mat-error *ngIf="employeeForm.get('firstName')?.errors">
+          {{ getErrorMessage('firstName') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" placeholder="Enter last name">
+        <mat-error *ngIf="employeeForm.get('lastName')?.errors">
+          {{ getErrorMessage('lastName') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="Enter email" type="email">
+        <mat-error *ngIf="employeeForm.get('email')?.errors">
+          {{ getErrorMessage('email') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" placeholder="Enter phone number">
+        <mat-error *ngIf="employeeForm.get('phone')?.errors">
+          {{ getErrorMessage('phone') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Department</mat-label>
+        <mat-select formControlName="department">
+          <mat-option *ngFor="let dept of departments" [value]="dept">
+            {{ dept }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="employeeForm.get('department')?.errors">
+          {{ getErrorMessage('department') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Position</mat-label>
+        <input matInput formControlName="position" placeholder="Enter position">
+        <mat-error *ngIf="employeeForm.get('position')?.errors">
+          {{ getErrorMessage('position') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Salary</mat-label>
+        <input matInput formControlName="salary" placeholder="Enter salary" type="number">
+        <mat-error *ngIf="employeeForm.get('salary')?.errors">
+          {{ getErrorMessage('salary') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hire Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="hireDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="employeeForm.get('hireDate')?.errors">
+          {{ getErrorMessage('hireDate') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <div class="file-upload">
+        <label>Profile Picture</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" #fileInput>
+        <button type="button" mat-stroked-button (click)="fileInput.click()">
+          Choose File
+        </button>
+        <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+      </div>
+
+      <div class="preview-container" *ngIf="previewUrl">
+        <img [src]="previewUrl" alt="Profile preview" class="preview-image">
+      </div>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="button" mat-button (click)="onCancel()">Cancel</button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        {{ isLoading ? 'Saving...' : (employee ? 'Update' : 'Create') }}
+      </button>
+    </div>
+  </form>
+</div>

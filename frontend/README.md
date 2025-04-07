@@ -1,6 +1,31 @@
-# Frontend
+# Employee Management System - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.6.
+This is the frontend application for the Employee Management System, built with Angular 17 and Angular Material.
+
+## Features
+
+- User authentication with JWT
+- Employee management (CRUD operations)
+- File upload for employee photos
+- Responsive design
+- GraphQL integration
+- Material Design components
+
+## Prerequisites
+
+- Node.js (v18 or later)
+- npm (v9 or later)
+- Angular CLI (v17 or later)
+- Backend server running (see backend README)
+
+## Installation
+
+1. Clone the repository
+2. Navigate to the frontend directory
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
 ## Development server
 
@@ -52,8 +77,35 @@ For end-to-end (e2e) testing, run:
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Frontend Structure
+```
+src/
+├── app/
+│   ├── core/                 # Core module (services, guards, interceptors)
+│   │   ├── constants/        # Application constants
+│   │   ├── guards/          # Route guards
+│   │   ├── interceptors/    # HTTP interceptors
+│   │   ├── models/          # TypeScript interfaces
+│   │   └── services/        # Core services
+│   ├── features/            # Feature modules
+│   │   ├── auth/           # Authentication feature
+│   │   └── employee/       # Employee management feature
+│   ├── shared/             # Shared module (common components, directives, pipes)
+│   └── app.module.ts       # Root module
+├── assets/                 # Static assets
+└── styles/                # Global styles
+```
 
-## Additional Resources
+## Backend Integration
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This frontend application connects to the Employee Management System backend, which provides:
+
+- GraphQL API for data operations
+- JWT authentication
+- File upload capabilities
+
+For detailed information about the backend API, refer to the [Backend README](../backend/README.md).
+
+## Author  
+Yasaman Mirvahabi Sabet  
+Student ID: 101217770

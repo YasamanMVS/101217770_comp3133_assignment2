@@ -1,4 +1,4 @@
-require('dotenv').config();
+import 'dotenv/config';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
@@ -63,6 +63,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 console.log('Serving uploads from:', uploadsDir);
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Employee Management API is running' });
+});
+
 // File upload endpoint with authentication
 app.post('/upload', authMiddleware, uploadMulter.single('file'), (req, res) => {
   if (!req.file) {
@@ -71,20 +76,6 @@ app.post('/upload', authMiddleware, uploadMulter.single('file'), (req, res) => {
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
   res.json({ url: fileUrl });
 });
-
-// Connect to MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/employee_db';
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
-      console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
-    });
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-  });
 
 // REST endpoints for file upload
 app.post('/api/employees', authMiddleware, upload.single('file'), handleUploadError, async (req, res) => {
@@ -133,23 +124,41 @@ const server = new ApolloServer({
   }
 });
 
-// Start the server
-async function startServer() {
-  await server.start();
-  
-  app.use('/graphql', expressMiddleware(server, {
-    context: async ({ req }) => ({
-      token: req.headers.authorization || ''
-    })
-  }));
+// Connect to MongoDB
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/employee_db';
 
-  app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
-  });
+// Initialize Apollo Server and connect to MongoDB
+async function startServer() {
+  try {
+    // Connect to MongoDB
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB');
+    
+    // Start Apollo Server
+    await server.start();
+    
+    // Add GraphQL middleware
+    app.use('/graphql', expressMiddleware(server, {
+      context: async ({ req }) => ({
+        token: req.headers.authorization || ''
+      })
+    }));
+    
+    // Only start the server if we're not in a serverless environment
+    if (process.env.NODE_ENV !== 'production') {
+      app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+        console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
+      });
+    }
+  } catch (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  }
 }
 
-startServer().catch(err => {
-  console.error('Error starting server:', err);
-  process.exit(1);
-}); 
+// Start the server
+startServer();
+
+// Export the Express app for Vercel
+export default app; 

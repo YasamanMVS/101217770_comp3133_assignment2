@@ -9,11 +9,11 @@
   "routes": [
     {
       "src": "/graphql",
-      "dest": "src/index.js"
+      "dest": "/src/index.js"
     },
     {
       "src": "/api/(.*)",
-      "dest": "src/index.js"
+      "dest": "/src/index.js"
     },
     {
       "src": "/uploads/(.*)",
@@ -21,7 +21,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "src/index.js"
+      "dest": "/src/index.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 } 

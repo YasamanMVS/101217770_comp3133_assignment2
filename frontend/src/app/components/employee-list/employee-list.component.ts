@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { environment } from '../../environments/environment';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-list',
@@ -17,15 +18,21 @@ import { environment } from '../../environments/environment';
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
+    RouterModule,
+    FormsModule
   ]
 })
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
+  filteredEmployees: Employee[] = [];
   loading = false;
   error = '';
   displayedColumns: string[] = ['profilePic', 'firstName', 'lastName', 'email', 'department', 'position', 'actions'];
   private readonly defaultAvatar = 'assets/default-avatar.png';
+  
+  // Search properties
+  searchTerm: string = '';
+  searchField: 'department' | 'position' | 'both' = 'both';
 
   constructor(
     private graphqlService: GraphQLService,
@@ -43,6 +50,7 @@ export class EmployeeListComponent implements OnInit {
     this.graphqlService.getEmployees().subscribe({
       next: (employees: Employee[]) => {
         this.employees = employees;
+        this.filteredEmployees = employees;
         this.loading = false;
       },
       error: (error: Error) => {
@@ -51,6 +59,35 @@ export class EmployeeListComponent implements OnInit {
         this.snackBar.open(this.error, 'Close', { duration: 3000 });
       }
     });
+  }
+
+  onSearch(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredEmployees = this.employees;
+      return;
+    }
+
+    const searchTermLower = this.searchTerm.toLowerCase().trim();
+    
+    this.filteredEmployees = this.employees.filter(employee => {
+      const departmentMatch = employee.department.toLowerCase().includes(searchTermLower);
+      const positionMatch = employee.position.toLowerCase().includes(searchTermLower);
+
+      switch (this.searchField) {
+        case 'department':
+          return departmentMatch;
+        case 'position':
+          return positionMatch;
+        case 'both':
+        default:
+          return departmentMatch || positionMatch;
+      }
+    });
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.filteredEmployees = this.employees;
   }
 
   getProfilePicUrl(profilePic: string | null): string {
